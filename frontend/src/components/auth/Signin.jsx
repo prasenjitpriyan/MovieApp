@@ -1,17 +1,17 @@
-import React, { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeProvider";
+import React from "react";
 import Container from "../Container";
+import FormContainer from "../form/FormContainer";
 import Title from "../form/Title";
 import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import CustomLink from "../CustomLink";
+import { commonModalClasses } from "../../utils/theme";
 
 const Signin = () => {
-  const theme = useContext(ThemeContext);
   return (
-    <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded p-6 w-72 space-y-6">
+        <form className={commonModalClasses + " w-72"}>
           <Title>Sign in </Title>
           <FormInput label="Email" placeholder="john@email.com" name="email" />
           <FormInput label="Password" placeholder="********" name="password" />
@@ -22,7 +22,7 @@ const Signin = () => {
           </div>
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 };
 
