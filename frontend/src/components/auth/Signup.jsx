@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Container from "../Container";
 import Title from "../form/Title";
 import FormInput from "../form/FormInput";
@@ -6,6 +7,8 @@ import Submit from "../form/Submit";
 import CustomLink from "../CustomLink";
 import { commonModalClasses } from "../../utils/theme";
 import FormContainer from "../form/FormContainer";
+import { createUser } from "../../api/auth";
+import { useNotification } from "../../hooks/hooks";
 
 const validateUserInfo = ({ name, email, password }) => {
   const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -31,16 +34,26 @@ const Signup = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+
+  const { updateNotification } = useNotification();
+
   const handleChange = ({ target }) => {
     const { value, name } = target;
     setUserInfo({ ...userInfo, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
-    if (!ok) return console.log(error);
-    console.log(userInfo);
+    if (!ok) return updateNotification("error", error);
+    const response = await createUser(userInfo);
+    if (response.error) return console.log(response.error);
+    navigate("/auth/verification", {
+      state: { user: response.user },
+      replace: true,
+    });
+    console.log(response.user);
   };
 
   const { name, email, password } = userInfo;
